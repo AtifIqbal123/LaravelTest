@@ -1,24 +1,27 @@
 <template>
     <div>
-        <h4 class="text-center">All Books</h4><br/>
+        <h4 class="text-center">All Companies</h4><br/>
         <table class="table table-bordered">
             <thead>
             <tr>
                 <th>ID</th>
                 <th>Name</th>
-                <th>Author</th>
-                <th>Created At</th>
-                <th>Updated At</th>
+                <th>Email</th>
+                <th>Website</th>
+                <th>Logo</th>
                 <th>Actions</th>
             </tr>
             </thead>
             <tbody>
-            <tr v-for="comapny in companies" :key="comapny.id">
-                <td>{{ comapny.id }}</td>
-                <td>{{ comapny.name }}</td>
-                <td>{{ comapny.email }}</td>
-                <td>{{ comapny.created_at }}</td>
-                <td>{{ comapny.updated_at }}</td>
+            <tr v-for="company in companies" :key="company.id">
+                <td>{{ company.id }}</td>
+                <td>{{ company.name }}</td>
+                <td v-if="company.email != null">{{ company.email }}</td>
+                <td v-else>-</td>
+                <td v-if="company.website != 'null'">{{ company.website }}</td>
+                <td v-else>-</td>
+                <td v-if="company.logo"><img :src="'thumbnail/'+company.logo" /></td>
+                <td v-else>-</td>
                 <td>
                     <div class="btn-group" role="group">
                         <router-link :to="{name: 'editcompany', params: { id: company.id }}" class="btn btn-primary">Edit
@@ -30,7 +33,7 @@
             </tbody>
         </table>
 
-        <button type="button" class="btn btn-info" @click="this.$router.push('/companies/add')">Add Book</button>
+        <button type="button" class="btn btn-info" @click="this.$router.push('/companies/add')">Add Company</button>
     </div>
 </template>
 
