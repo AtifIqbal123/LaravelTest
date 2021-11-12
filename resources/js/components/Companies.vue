@@ -16,7 +16,7 @@
             <tr v-for="company in companies" :key="company.id">
                 <td>{{ company.id }}</td>
                 <td>{{ company.name }}</td>
-                <td v-if="company.email != null">{{ company.email }}</td>
+                <td v-if="company.email != 'null'">{{ company.email }}</td>
                 <td v-else>-</td>
                 <td v-if="company.website != 'null'">{{ company.website }}</td>
                 <td v-else>-</td>
@@ -34,10 +34,13 @@
         </table>
 
         <button type="button" class="btn btn-info" @click="this.$router.push('/companies/add')">Add Company</button>
+        <template>
+</template>
     </div>
 </template>
 
 <script>
+
 export default {
     data() {
         return {
@@ -48,7 +51,8 @@ export default {
         this.$axios.get('/sanctum/csrf-cookie').then(response => {
             this.$axios.get('/api/companies')
                 .then(response => {
-                    this.companies = response.data;
+                    this.companies = response.data.data;
+                    console.log(this.companies)
                 })
                 .catch(function (error) {
                     console.error(error);
@@ -58,7 +62,7 @@ export default {
     methods: {
         deleteCompany(id) {
             this.$axios.get('/sanctum/csrf-cookie').then(response => {
-                this.$axios.delete(`/api/companies/delete/${id}`)
+                this.$axios.delete(`/api/companies/${id}`)
                     .then(response => {
                         let i = this.companies.map(item => item.id).indexOf(id); // find index of your object
                         this.companies.splice(i, 1)

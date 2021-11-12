@@ -6,7 +6,8 @@
                 <form @submit.prevent="updateBook">
                     <div class="form-group">
                         <label>Name</label>
-                        <input type="text" class="form-control" v-model="company.name">
+                        <input type="text" :class="error_class" class="form-control" v-model="company.name">
+                        <small class="red-font">{{ error_name }} </small>
                     </div><br>
                     <div class="form-group">
                         <label>Email</label>
@@ -32,27 +33,19 @@ export default {
     data() {
         return {
             company: {
-                name: null,
-                email: null,
-                website: null,
-                logo: null
+                name: '',
+                email: '',
+                website: '',
+                logo: ''
             },
-            file:''
+            file:'',
+            error_name:''
         }
     },
     created() {
         this.$axios.get('/sanctum/csrf-cookie').then(response => {
-            this.$axios.get(`/api/companies/edit/${this.$route.params.id}`)
+            this.$axios.get(`/api/companies/${this.$route.params.id}/edit`)
                 .then(response => {
-                    console.log(response.data.website)
-                    if(response.data.website == 'null')
-                    {
-                        response.data.website = ''
-                    }
-                    if(response.data.email == 'null')
-                    {
-                        response.data.email = ''
-                    }
                     this.company = response.data;
                 })
                 .catch(function (error) {
@@ -79,14 +72,18 @@ export default {
             data.append('name',this.company.name);
             data.append('email',this.company.email);
             data.append('website',this.company.website);
-
+            data.append("_method", "put");
+            console.log(this.company)
             this.$axios.get('/sanctum/csrf-cookie').then(response => {
-                this.$axios.post(`/api/companies/update/${this.$route.params.id}`, data, config)
+                this.$axios.post(`/api/companies/${this.$route.params.id}`, data, config)
                     .then(response => {
                         this.$router.push({name: 'Companies'});
                     })
-                    .catch(function (error) {
-                        console.error(error);
+                    .catch(error => {
+                        if (error.response.status == 401){
+                            this.error_name = error.response.data.error.name[0]
+                            this.error_class = "error"
+                        }
                     });
             })
         }
@@ -99,3 +96,11 @@ export default {
     }
 }
 </script>
+<style>
+.error {
+    border: 1px solid red;
+}
+.red-font {
+    color:red;
+}
+</style>

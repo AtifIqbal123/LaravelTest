@@ -6,7 +6,8 @@
                 <form @submit.prevent="addCompany" enctype="multipart/form-data">
                     <div class="form-group">
                         <label>Name</label>
-                        <input type="text" class="form-control" v-model="company.name">
+                        <input type="text" :class="error_class" class="form-control" v-model="company.name">
+                        <small class="red-font">{{ error_name }} </small>
                     </div><br>
                     <div class="form-group">
                         <label>Email</label>
@@ -32,11 +33,13 @@ export default {
     data() {
         return {
             company: {
-                name: null,
-                email: null,
-                website: null
+                name: '',
+                email: '',
+                website: ''
             },
-            file :''
+            file :'',
+            error_name:'',
+            error_class:''
         }
     },
     methods: {
@@ -55,12 +58,15 @@ export default {
             data.append('email',this.company.email);
             data.append('website',this.company.website);
             this.$axios.get('/sanctum/csrf-cookie').then(response => {
-                this.$axios.post('/api/companies/add', data, config)
+                this.$axios.post('/api/companies', data, config)
                     .then(response => {
                         this.$router.push({name: 'Companies'})
                     })
-                    .catch(function (error) {
-                        console.error(error);
+                    .catch(error => {
+                        if (error.response.status == 401){
+                            this.error_name = error.response.data.error.name[0]
+                            this.error_class = "error"
+                        }
                     });
             })
         }
@@ -73,3 +79,11 @@ export default {
     }
 }
 </script>
+<style>
+.error {
+    border: 1px solid red;
+}
+.red-font {
+    color:red;
+}
+</style>

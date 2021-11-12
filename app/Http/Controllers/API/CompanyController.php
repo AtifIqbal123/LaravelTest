@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Company;
 use Illuminate\Http\Request;
 use Image;
+use Validator; 
 
 class CompanyController extends Controller
 {
@@ -16,8 +17,9 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        $companies = Company::all()->toArray();
-        return array_reverse($companies);
+        $companies = Company::paginate(10);
+    	return response()->json($companies);
+        //return array_reverse($companies);
     }
 
     /**
@@ -38,6 +40,14 @@ class CompanyController extends Controller
      */
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:50'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 401);
+        }
+
         $logo = null;
         if($request->hasFile('file'))
         {
@@ -99,7 +109,14 @@ class CompanyController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:50'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 401);
+        }
+
         if($request->hasFile('file'))
         {
             $image = $request->file('file');
