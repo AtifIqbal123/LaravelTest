@@ -10,6 +10,10 @@ import Companies from '../components/Companies';
 import AddCompany from '../components/AddCompany';
 import EditCompany from '../components/EditCompany';
 
+import Employees from '../components/employee/Employees';
+import AddEmployee from '../components/employee/AddEmployee';
+import EditEmployee from '../components/employee/EditEmployee';
+
 export const routes = [
     {
         name: 'home',
@@ -50,6 +54,21 @@ export const routes = [
         name: 'editcompany',
         path: '/Companies/edit/:id',
         component: EditCompany
+    },
+    {
+        name: 'Employees',
+        path: '/Employees',
+        component: Employees
+    },
+    {
+        name: 'addEmployee',
+        path: '/Employees/add',
+        component: AddEmployee
+    },
+    {
+        name: 'editEmployee',
+        path: '/Employees/edit/:id',
+        component: EditEmployee
     },
 ];
 

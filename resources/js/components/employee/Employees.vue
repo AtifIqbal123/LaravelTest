@@ -1,19 +1,19 @@
 <template>
     <div>
-        <h4 class="text-center">All Companies</h4><br/>
+        <h4 class="text-center">All Employees</h4><br/>
         <table class="table table-bordered">
             <thead>
             <tr>
                 <th>ID</th>
-                <th>Name</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Company</th>
                 <th>Email</th>
-                <th>Website</th>
-                <th>Logo</th>
+                <th>Phone</th>
                 <th>Actions</th>
             </tr>
             </thead>
             <tbody>
-                {{data}}
             <tr v-for="(company) in companies.data" :key="company.id">
                 <td>{{ company.id }}</td>
                 <td>{{ company.name }}</td>
@@ -34,16 +34,7 @@
             </tbody>
         </table>
 
-        <button type="button" class="btn btn-info" @click="this.$router.push('/companies/add')">Add Company</button>
-        <div style="float:right">
-            <v-pagination
-                    v-model="companies"
-                    :pages="companies.last_page"
-                    :range-size="2"
-                    active-color="#DCEDFF"
-                    @update:modelValue="updateHandler"
-                />
-        </div>
+        <button type="button" class="btn btn-info" @click="this.$router.push('/employee/add')">Add Employee</button>
     </div>
 </template>
 
@@ -72,7 +63,7 @@ export default {
                         .then(response => {
                             //return response.json();
                              this.companies = response.data
-                            console.log(this.companies)
+                            console.log(this.companies.data)
                              //this.data = response.data
                         });
                 });
