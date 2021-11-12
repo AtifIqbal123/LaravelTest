@@ -6,7 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Company;
 use Illuminate\Http\Request;
 use Image;
-
+use Mail;
+use Log;
 class CompanyController extends Controller
 {
     /**
@@ -63,7 +64,11 @@ class CompanyController extends Controller
             'logo'  => $logo
         ]);
         $company->save();
-
+        Mail::to($request->email)->send(new \App\Mail\newCompanyMail());
+        if (count(Mail::failures()) > 0) {
+            Log::info("Error! Email did not send.");
+          }
+          Log::info("email sent");
         return response()->json('The Company successfully added');
     }
 
