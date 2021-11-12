@@ -34,13 +34,14 @@
             </tbody>
         </table>
 
-        <button type="button" class="btn btn-info" @click="this.$router.push('/employee/add')">Add Employee</button>
+        <button type="button" class="btn btn-info" @click="this.$router.push('/Employees/add')">Add Employee</button>
     </div>
 </template>
 
 <script>
 import VPagination from "@hennge/vue3-pagination";
 import "@hennge/vue3-pagination/dist/vue3-pagination.css";
+
 export default {
      components: {
         VPagination
@@ -59,7 +60,7 @@ export default {
                     page = 1;
                 }
                 this.$axios.get('/sanctum/csrf-cookie').then(response => {
-                    this.$axios.get('/api/companies?page=' + page)
+                    this.$axios.get('/api/employees?page=' + page)
                         .then(response => {
                             //return response.json();
                              this.companies = response.data
